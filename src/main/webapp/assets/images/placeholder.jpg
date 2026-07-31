@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="100%" height="100%">
+  <rect width="200" height="240" fill="#131a26" rx="12" stroke="rgba(255,255,255,0.05)" stroke-width="2"/>
+  <!-- Shirt shape -->
+  <path d="M 60,70 L 80,70 Q 100,85 120,70 L 140,70 L 170,95 L 155,110 L 145,102 L 145,185 L 55,185 L 55,102 L 45,110 L 30,95 Z" fill="#1b2436" stroke="#6b7280" stroke-width="2"/>
+  <text x="100" y="150" font-family="'Outfit', sans-serif" font-size="10" fill="#6b7280" text-anchor="middle">No Image Available</text>
+</svg>
