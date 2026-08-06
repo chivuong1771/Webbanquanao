@@ -1,12 +1,15 @@
 package poly.java.DAO;
 
+import poly.java.Entity.Product;
 import poly.java.Entity.Review;
+import poly.java.Entity.User;
+
 import java.util.List;
 
-public interface ReviewDAO extends GenericDAO<Review, Integer> {
+public interface ReviewDAO
+        extends GenericDAO<Review, Integer> {
 
-    List<Review> findByProduct(int productId);
+    List<Review> findByProduct(Product product);
 
-    List<Review> findByUser(int userId);
-
+    List<Review> findByUser(User user);
 }

@@ -1,33 +1,27 @@
 package poly.java.Entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Carts")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Cart {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CartID", nullable = false)
-    private Integer id;
+    @Column(name = "CartID")
+    private Integer cartId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UserID")
-    private User userID;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public User getUserID() {
-        return userID;
-    }
-
-    public void setUserID(User userID) {
-        this.userID = userID;
-    }
-
+    @OneToOne
+    @JoinColumn(
+            name = "UserID",
+            referencedColumnName = "UserID",
+            unique = true
+    )
+    private User user;
 }

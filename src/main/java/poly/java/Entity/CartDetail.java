@@ -1,61 +1,30 @@
 package poly.java.Entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import org.hibernate.annotations.ColumnDefault;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "CartDetails")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CartDetail {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CartDetailID", nullable = false)
-    private Integer id;
+    @Column(name = "CartDetailID")
+    private Integer cartDetailId;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name = "CartID", nullable = false)
-    private Cart cartID;
+    private Cart cart;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name = "VariantID", nullable = false)
-    private ProductVariant variantID;
+    private ProductVariant variant;
 
-    @ColumnDefault("1")
     @Column(name = "Quantity")
     private Integer quantity;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Cart getCartID() {
-        return cartID;
-    }
-
-    public void setCartID(Cart cartID) {
-        this.cartID = cartID;
-    }
-
-    public ProductVariant getVariantID() {
-        return variantID;
-    }
-
-    public void setVariantID(ProductVariant variantID) {
-        this.variantID = variantID;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
 }
