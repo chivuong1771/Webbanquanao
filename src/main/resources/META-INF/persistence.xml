@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+    <persistence-unit name="ClothingShopPU" transaction-type="RESOURCE_LOCAL">
+
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>poly.java.Entity.Address</class>
+        <class>poly.java.Entity.Banner</class>
+        <class>poly.java.Entity.Brand</class>
+        <class>poly.java.Entity.Cart</class>
+        <class>poly.java.Entity.CartDetail</class>
+        <class>poly.java.Entity.Category</class>
+        <class>poly.java.Entity.Color</class>
+        <class>poly.java.Entity.Coupon</class>
+        <class>poly.java.Entity.InventoryHistory</class>
+        <class>poly.java.Entity.Order</class>
+        <class>poly.java.Entity.OrderDetail</class>
+        <class>poly.java.Entity.OrderStatusHistory</class>
+        <class>poly.java.Entity.Payment</class>
+        <class>poly.java.Entity.Product</class>
+        <class>poly.java.Entity.ProductImage</class>
+        <class>poly.java.Entity.ProductVariant</class>
+        <class>poly.java.Entity.Promotion</class>
+        <class>poly.java.Entity.PromotionDetail</class>
+        <class>poly.java.Entity.Review</class>
+        <class>poly.java.Entity.Role</class>
+        <class>poly.java.Entity.Setting</class>
+        <class>poly.java.Entity.Size</class>
+        <class>poly.java.Entity.User</class>
+        <class>poly.java.Entity.Wishlist</class>
+
+        <properties>
+
+            <property name="jakarta.persistence.jdbc.driver"
+                      value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+
+            <property name="jakarta.persistence.jdbc.url"
+                      value="jdbc:sqlserver://localhost:1433;databaseName=ClothingShop;encrypt=true;trustServerCertificate=true"/>
+
+            <property name="jakarta.persistence.jdbc.user"
+                      value="sa"/>
+
+            <property name="jakarta.persistence.jdbc.password"
+                      value="Sa123456@"/>
+
+            <property name="hibernate.dialect"
+                      value="org.hibernate.dialect.SQLServerDialect"/>
+
+            <property name="hibernate.show_sql"
+                      value="true"/>
+
+            <property name="hibernate.format_sql"
+                      value="true"/>
+
+            <property name="jakarta.persistence.schema-generation.database.action"
+                      value="update"/>
+        </properties>
+
+    </persistence-unit>
+
+</persistence>
