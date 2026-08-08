@@ -45,7 +45,7 @@ public class CartService {
             for (CartDetail detail : details) {
 
                 ProductVariant variant =
-                        detail.getVariant();
+                        detail.getVariantID();
 
                 Product product =
                         variant.getProductID();
@@ -55,7 +55,7 @@ public class CartService {
 
                 // ID CartDetail
                 dto.setId(
-                        detail.getCartDetailId()
+                        detail.getId()
                 );
 
                 // ID Variant
@@ -200,11 +200,11 @@ public class CartService {
              * đúng User hiện tại không.
              */
             Cart cart =
-                    detail.getCart();
+                    detail.getCartID();
 
             if (cart == null ||
-                    cart.getUser() == null ||
-                    !cart.getUser()
+                    cart.getUserID() == null ||
+                    !cart.getUserID()
                             .getId()
                             .equals(user.getId())) {
 
@@ -214,7 +214,7 @@ public class CartService {
             }
 
             ProductVariant variant =
-                    detail.getVariant();
+                    detail.getVariantID();
 
             /*
              * quantity của ProductVariant
@@ -291,11 +291,11 @@ public class CartService {
              * đúng User hiện tại không.
              */
             Cart cart =
-                    detail.getCart();
+                    detail.getCartID();
 
             if (cart == null ||
-                    cart.getUser() == null ||
-                    !cart.getUser()
+                    cart.getUserID() == null ||
+                    !cart.getUserID()
                             .getId()
                             .equals(user.getId())) {
 

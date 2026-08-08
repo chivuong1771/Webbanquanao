@@ -47,12 +47,12 @@ public class ReviewService {
 
             Review review = new Review();
 
-            review.setUser(user);
-            review.setProduct(product);
+            review.setUserID(user);
+            review.setProductID(product);
             review.setRating(rating);
             review.setComment(comment);
             review.setCreatedAt(
-                    LocalDateTime.now()
+                    java.time.Instant.now()
             );
 
             em.persist(review);

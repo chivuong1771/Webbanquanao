@@ -73,8 +73,8 @@ public class WishlistService {
             }
 
             // Kiểm tra wishlist có thuộc user hiện tại không
-            if (wishlist.getUser() == null ||
-                    wishlist.getUser()
+            if (wishlist.getUserID() == null ||
+                    wishlist.getUserID()
                             .getId()
                             .equals(user.getId()) == false) {
 
