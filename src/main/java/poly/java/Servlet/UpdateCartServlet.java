@@ -11,7 +11,7 @@ import poly.java.Service.CartService;
 
 import java.io.IOException;
 
-@WebServlet("/cart/update")
+// @WebServlet("/cart/update")
 public class UpdateCartServlet extends HttpServlet {
 
     private final CartService cartService =

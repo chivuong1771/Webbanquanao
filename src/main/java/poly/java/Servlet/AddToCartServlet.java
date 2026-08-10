@@ -10,7 +10,7 @@ import poly.java.Service.CartService;
 
 import java.io.IOException;
 
-@WebServlet("/cart/add")
+// @WebServlet("/cart/add")
 public class AddToCartServlet extends HttpServlet {
 
     private final CartService cartService =
