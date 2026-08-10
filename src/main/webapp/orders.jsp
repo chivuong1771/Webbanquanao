@@ -20,6 +20,9 @@
     <c:if test="${param.error == 'cancel_failed'}">
         <div class="form-error">Hủy đơn hàng thất bại. Vui lòng liên hệ hỗ trợ.</div>
     </c:if>
+    <c:if test="${param.error == 'payos_cancelled'}">
+        <div class="form-error">Giao dịch thanh toán PayOS đã bị hủy hoặc chưa hoàn tất. Bạn có thể thanh toán lại sau.</div>
+    </c:if>
 
     <div style="background-color: var(--bg-secondary); border-radius: var(--radius-md); border: 1px solid var(--border-color); padding: 24px; overflow-x: auto;">
         <c:choose>

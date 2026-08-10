@@ -82,8 +82,9 @@ public class CheckoutServlet extends HttpServlet {
 
                         int amount = order.getFinalAmount() != null ? order.getFinalAmount().intValue() : 0;
                         String desc = "TT Don Hang " + order.getId();
+                        long payosOrderCode = (long) order.getId() * 100000L + (System.currentTimeMillis() % 100000L);
 
-                        PayOSService.PayOSResult payOSResult = PayOSService.createPaymentLink(order.getId(), amount, desc, returnUrl, cancelUrl);
+                        PayOSService.PayOSResult payOSResult = PayOSService.createPaymentLink(payosOrderCode, amount, desc, returnUrl, cancelUrl);
 
                         Payment payment = new Payment();
                         payment.setOrderID(order);
@@ -112,6 +113,13 @@ public class CheckoutServlet extends HttpServlet {
         }
 
         if ("/checkout/payment/confirm".equals(path) || "/checkout/payment/payos-return".equals(path)) {
+            String cancel = req.getParameter("cancel");
+            String code = req.getParameter("code");
+            if ("true".equalsIgnoreCase(cancel) || (code != null && !"00".equals(code))) {
+                resp.sendRedirect(req.getContextPath() + "/orders?error=payos_cancelled");
+                return;
+            }
+
             String orderIdStr = req.getParameter("orderId");
             if (orderIdStr != null) {
                 try {

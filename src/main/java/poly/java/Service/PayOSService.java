@@ -59,8 +59,13 @@ public class PayOSService {
     public static PayOSResult createPaymentLink(long orderCode, int amount, String description, String returnUrl, String cancelUrl) {
         try {
             String desc = description;
-            if (desc != null && desc.length() > 25) {
-                desc = desc.substring(0, 25);
+            if (desc != null) {
+                desc = java.text.Normalizer.normalize(desc, java.text.Normalizer.Form.NFD)
+                        .replaceAll("\\p{M}", "")
+                        .replaceAll("[^a-zA-Z0-9 ]", "");
+                if (desc.length() > 25) {
+                    desc = desc.substring(0, 25);
+                }
             }
 
             if (payOS != null) {
