@@ -5,7 +5,7 @@
 <div class="container">
     <div class="form-card">
         <h2 class="form-title">Đăng Nhập</h2>
-        <p class="form-desc">Chào mừng bạn quay trở lại với ANTIGRAVITY</p>
+        <p class="form-desc">Chào mừng bạn quay trở lại với Fashion Shop</p>
 
         <!-- Thông báo lỗi đăng nhập -->
         <c:if test="${not empty error}">
