@@ -140,8 +140,8 @@ public class User {
         this.status = status;
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
+    public java.util.Date getCreatedAt() {
+        return createdAt != null ? java.util.Date.from(createdAt) : null;
     }
 
     public void setCreatedAt(Instant createdAt) {
