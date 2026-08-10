@@ -1,79 +1,40 @@
 package poly.java.Servlet;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
+import poly.java.DAO.CartDetailDAO;
+import poly.java.DAO.Impl.CartDetailDAOImpl;
 import poly.java.Entity.User;
-import poly.java.Service.CartService;
 
 import java.io.IOException;
 
-// @WebServlet("/cart/remove")
+@WebServlet("/cart/remove")
 public class RemoveCartServlet extends HttpServlet {
 
-    private final CartService cartService =
-            new CartService();
+    private final CartDetailDAO cartDetailDAO = new CartDetailDAOImpl();
 
     @Override
-    protected void doGet(
-            HttpServletRequest request,
-            HttpServletResponse response)
-            throws IOException {
-
-        HttpSession session =
-                request.getSession();
-
-        User user =
-                (User) session.getAttribute("currentUser");
-
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        User user = (User) req.getSession().getAttribute("currentUser");
         if (user == null) {
-
-            response.sendRedirect(
-                    request.getContextPath()
-                            + "/login"
-            );
-
+            resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
-        try {
-
-            int cartDetailId =
-                    Integer.parseInt(
-                            request.getParameter("id")
-                    );
-
-            cartService.removeItem(
-                    user,
-                    cartDetailId
-            );
-
-            response.sendRedirect(
-                    request.getContextPath()
-                            + "/cart"
-                            + "?success=remove_success"
-            );
-
-        } catch (NumberFormatException e) {
-
-            response.sendRedirect(
-                    request.getContextPath()
-                            + "/cart"
-                            + "?error=invalid_id"
-            );
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-            response.sendRedirect(
-                    request.getContextPath()
-                            + "/cart"
-                            + "?error=remove_failed"
-            );
+        String idStr = req.getParameter("id");
+        if (idStr != null) {
+            try {
+                int detailId = Integer.parseInt(idStr);
+                cartDetailDAO.delete(detailId);
+                resp.sendRedirect(req.getContextPath() + "/cart?success=remove_success");
+                return;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        resp.sendRedirect(req.getContextPath() + "/cart");
     }
 }

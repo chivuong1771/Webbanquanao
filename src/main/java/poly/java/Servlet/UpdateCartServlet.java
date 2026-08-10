@@ -1,112 +1,52 @@
 package poly.java.Servlet;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
+import poly.java.DAO.CartDetailDAO;
+import poly.java.DAO.Impl.CartDetailDAOImpl;
+import poly.java.Entity.CartDetail;
 import poly.java.Entity.User;
-import poly.java.Service.CartService;
 
 import java.io.IOException;
 
-// @WebServlet("/cart/update")
+@WebServlet("/cart/update")
 public class UpdateCartServlet extends HttpServlet {
 
-    private final CartService cartService =
-            new CartService();
+    private final CartDetailDAO cartDetailDAO = new CartDetailDAOImpl();
 
     @Override
-    protected void doPost(
-            HttpServletRequest request,
-            HttpServletResponse response)
-            throws IOException {
-
-        HttpSession session =
-                request.getSession();
-
-        User user =
-                (User) session.getAttribute("currentUser");
-
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        User user = (User) req.getSession().getAttribute("currentUser");
         if (user == null) {
-
-            response.sendRedirect(
-                    request.getContextPath()
-                            + "/login"
-            );
-
+            resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
-        try {
+        String itemIdStr = req.getParameter("cartItemId");
+        String qtyStr = req.getParameter("quantity");
 
-            int cartItemId =
-                    Integer.parseInt(
-                            request.getParameter(
-                                    "cartItemId"
-                            )
-                    );
-
-            int quantity =
-                    Integer.parseInt(
-                            request.getParameter(
-                                    "quantity"
-                            )
-                    );
-
-            if (quantity <= 0) {
-
-                response.sendRedirect(
-                        request.getContextPath()
-                                + "/cart"
-                                + "?error=invalid_quantity"
-                );
-
+        if (itemIdStr != null && qtyStr != null) {
+            try {
+                int detailId = Integer.parseInt(itemIdStr);
+                int quantity = Integer.parseInt(qtyStr);
+                CartDetail detail = cartDetailDAO.findById(detailId);
+                if (detail != null) {
+                    if (quantity > 0) {
+                        detail.setQuantity(quantity);
+                        cartDetailDAO.update(detail);
+                    } else {
+                        cartDetailDAO.delete(detailId);
+                    }
+                }
+                resp.sendRedirect(req.getContextPath() + "/cart?success=update_success");
                 return;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            boolean success =
-                    cartService.updateQuantity(
-                            user,
-                            cartItemId,
-                            quantity
-                    );
-
-            if (success) {
-
-                response.sendRedirect(
-                        request.getContextPath()
-                                + "/cart"
-                                + "?success=update_success"
-                );
-
-            } else {
-
-                response.sendRedirect(
-                        request.getContextPath()
-                                + "/cart"
-                                + "?error=out_of_stock"
-                );
-            }
-
-        } catch (NumberFormatException e) {
-
-            response.sendRedirect(
-                    request.getContextPath()
-                            + "/cart"
-                            + "?error=invalid_quantity"
-            );
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-            response.sendRedirect(
-                    request.getContextPath()
-                            + "/cart"
-                            + "?error=update_failed"
-            );
         }
+        resp.sendRedirect(req.getContextPath() + "/cart");
     }
 }
