@@ -167,6 +167,15 @@ public class User {
     }
 
     public String getAddress() {
+        if (id != null) {
+            try {
+                poly.java.DAO.AddressDAO addressDAO = new poly.java.DAO.Impl.AddressDAOImpl();
+                poly.java.Entity.Address addr = addressDAO.findDefaultAddress(id);
+                if (addr != null && addr.getAddressDetail() != null) {
+                    return addr.getAddressDetail();
+                }
+            } catch (Exception ignored) {}
+        }
         return "";
     }
 
