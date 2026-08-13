@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1b2436" />
+      <stop offset="100%" stop-color="#0b0f19" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="240" fill="url(#grad)" rx="12"/>
+  <!-- T-shirt silhouette -->
+  <path d="M 60,40 L 80,40 Q 100,60 120,40 L 140,40 L 175,70 L 155,90 L 145,80 L 145,200 L 55,200 L 55,80 L 45,90 L 25,70 Z" fill="#fff" stroke="#d4af37" stroke-width="2"/>
+  <text x="100" y="140" font-family="'Outfit', sans-serif" font-size="12" font-weight="bold" fill="#0b0f19" text-anchor="middle" letter-spacing="1">NIKE DRI-FIT</text>
+  <text x="100" y="160" font-family="'Outfit', sans-serif" font-size="10" fill="#6b7280" text-anchor="middle">Trắng / White</text>
+</svg>
