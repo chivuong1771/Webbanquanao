@@ -30,15 +30,23 @@ public class ProductImageDAOImpl extends GenericDAOImpl<ProductImage, Integer> i
     public ProductImage findMainImage(int productId) {
         EntityManager em = JpaUtil.getEntityManager();
         try {
-            String jpql = "SELECT pi FROM ProductImage pi WHERE pi.productID.id = :productId AND pi.isMain = true";
-            List<ProductImage> list = em.createQuery(jpql, ProductImage.class)
+            String jpqlMain = "SELECT pi FROM ProductImage pi WHERE pi.productID.id = :productId AND pi.isMain = true";
+            List<ProductImage> list = em.createQuery(jpqlMain, ProductImage.class)
                     .setParameter("productId", productId)
+                    .setMaxResults(1)
                     .getResultList();
+
             if (!list.isEmpty()) {
                 return list.get(0);
             }
-            List<ProductImage> all = findByProduct(productId);
-            return all.isEmpty() ? null : all.get(0);
+
+            String jpqlFallback = "SELECT pi FROM ProductImage pi WHERE pi.productID.id = :productId";
+            List<ProductImage> fallback = em.createQuery(jpqlFallback, ProductImage.class)
+                    .setParameter("productId", productId)
+                    .setMaxResults(1)
+                    .getResultList();
+
+            return fallback.isEmpty() ? null : fallback.get(0);
         } finally {
             em.close();
         }
