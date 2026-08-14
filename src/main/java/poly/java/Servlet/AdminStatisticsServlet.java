@@ -19,7 +19,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@WebServlet({"/admin/statistics", "/admin/dashboard"})
+@WebServlet("/admin/statistics")
 public class AdminStatisticsServlet extends HttpServlet {
 
     private final OrderDAO orderDAO = new OrderDAOImpl();

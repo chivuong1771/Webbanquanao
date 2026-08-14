@@ -15,7 +15,7 @@ import poly.java.Entity.OrderDetail;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet({"/admin/orders", "/admin/orders/detail", "/admin/orders/cancel"})
+@WebServlet({"/admin/orders/detail", "/admin/orders/cancel"})
 public class AdminOrderManagementServlet extends HttpServlet {
 
     private final OrderDAO orderDAO = new OrderDAOImpl();

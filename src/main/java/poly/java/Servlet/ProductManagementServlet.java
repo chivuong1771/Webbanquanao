@@ -14,7 +14,7 @@ import poly.java.Entity.Product;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet({"/admin/products"})
+@WebServlet("/admin/products/search")
 public class ProductManagementServlet extends HttpServlet {
 
     private final ProductDAO productDAO = new ProductDAOImpl();
