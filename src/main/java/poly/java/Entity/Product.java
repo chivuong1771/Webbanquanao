@@ -133,6 +133,38 @@ public class Product {
         return thumbnail;
     }
 
+    public String getImageUrl() {
+        if (thumbnail != null && !thumbnail.isBlank()) {
+            if (thumbnail.startsWith("http://") || thumbnail.startsWith("https://")) {
+                return thumbnail;
+            }
+            if (thumbnail.contains("/")) {
+                return thumbnail;
+            }
+            switch (thumbnail.toLowerCase()) {
+                case "ao1.jpg": return "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop";
+                case "ao2.jpg": return "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=500&auto=format&fit=crop";
+                case "ao3.jpg": return "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500&auto=format&fit=crop";
+                case "ao4.jpg": return "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500&auto=format&fit=crop";
+                case "ao5.jpg": return "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=500&auto=format&fit=crop";
+                case "ao6.jpg": return "https://images.unsplash.com/photo-1542272604-780c36856d60?w=500&auto=format&fit=crop";
+                default: return thumbnail;
+            }
+        }
+        if (productImages != null && !productImages.isEmpty()) {
+            for (ProductImage img : productImages) {
+                if (img.getImageUrl() != null && !img.getImageUrl().isBlank()) {
+                    return img.getImageUrl();
+                }
+            }
+        }
+        return "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop";
+    }
+
+    public String getPrimaryImage() {
+        return getImageUrl();
+    }
+
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
     }

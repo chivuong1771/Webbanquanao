@@ -72,14 +72,7 @@
                         <tr style="border-bottom: 1px solid var(--border-color); font-size: 0.95rem;">
                             <td style="border: none; padding: 12px 16px;">
                                 <div style="width: 50px; height: 60px; border-radius: var(--radius-sm); overflow: hidden; background-color: var(--bg-tertiary);">
-                                    <c:choose>
-                                        <c:when test="${not empty prod.primaryImage}">
-                                            <img src="${prod.primaryImage.startsWith('http') ? prod.primaryImage : pageContext.request.contextPath.concat('/').concat(prod.primaryImage)}" style="width: 100%; height: 100%; object-fit: cover;">
-                                        </c:when>
-                                        <c:otherwise>
-                                            <img src="${pageContext.request.contextPath}/assets/images/placeholder.jpg" style="width: 100%; height: 100%; object-fit: cover;">
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <img src="${prod.imageUrl}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop';" style="width: 100%; height: 100%; object-fit: cover;">
                                 </div>
                             </td>
                             <td style="border: none; padding: 20px 16px; font-weight: 600;">#${prod.id}</td>
@@ -150,7 +143,7 @@
         
         <h2 id="modalTitle" style="font-size: 1.8rem; font-weight: 800; margin-bottom: 24px; color: var(--accent);">Thêm Sản Phẩm Mới</h2>
         
-        <form id="productForm" method="POST" action="">
+        <form id="productForm" method="POST" action="" enctype="multipart/form-data">
             <input type="hidden" id="prodId" name="id" value="">
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
@@ -193,8 +186,23 @@
                 </div>
 
                 <div class="form-group" style="grid-column: span 2; margin-bottom: 0;">
-                    <label class="form-label">Đường dẫn ảnh sản phẩm (URL)</label>
-                    <input type="text" id="prodImageUrl" name="imageUrl" class="form-control" style="width: 100%;" placeholder="Ví dụ: assets/images/placeholder.svg">
+                    <label class="form-label" style="font-weight: 700; color: var(--text-primary);">Hình Ảnh Sản Phẩm</label>
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <button type="button" id="btnTabUrl" onclick="toggleImgSource('url')" style="padding: 6px 14px; font-size: 0.85rem; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent); color: #000; font-weight: 700; cursor: pointer;">Dán Link URL</button>
+                        <button type="button" id="btnTabFile" onclick="toggleImgSource('file')" style="padding: 6px 14px; font-size: 0.85rem; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-tertiary); color: var(--text-primary); font-weight: 600; cursor: pointer;">Tải Ảnh Từ Máy Tính</button>
+                    </div>
+
+                    <div id="boxUrlInput">
+                        <input type="text" id="prodImageUrl" name="imageUrl" class="form-control" style="width: 100%;" placeholder="Dán link ảnh (https://...)" oninput="updatePreview(this.value)">
+                    </div>
+
+                    <div id="boxFileInput" style="display: none;">
+                        <input type="file" id="prodImageFile" name="imageFile" accept="image/*" class="form-control" style="width: 100%; padding: 8px;" onchange="previewSelectedFile(this)">
+                    </div>
+
+                    <div style="margin-top: 10px; text-align: center;">
+                        <img id="prodImagePreview" src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop';" style="max-height: 100px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-color); display: inline-block;">
+                    </div>
                 </div>
                 
                 <div class="form-group" style="margin-bottom: 0;">
@@ -239,6 +247,8 @@
         document.getElementById("prodIsNew").checked = false;
         document.getElementById("prodIsBestSeller").checked = false;
         
+        toggleImgSource('url');
+        document.getElementById("prodImagePreview").src = "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop";
         document.getElementById("productModal").style.display = "flex";
     }
 
@@ -257,7 +267,45 @@
         document.getElementById("prodIsNew").checked = prod.isNew;
         document.getElementById("prodIsBestSeller").checked = prod.isBestSeller;
         
+        toggleImgSource('url');
+        updatePreview(prod.imageUrl);
         document.getElementById("productModal").style.display = "flex";
+    }
+
+    function toggleImgSource(mode) {
+        if (mode === 'url') {
+            document.getElementById('boxUrlInput').style.display = 'block';
+            document.getElementById('boxFileInput').style.display = 'none';
+            document.getElementById('btnTabUrl').style.background = 'var(--accent)';
+            document.getElementById('btnTabUrl').style.color = '#000';
+            document.getElementById('btnTabFile').style.background = 'var(--bg-tertiary)';
+            document.getElementById('btnTabFile').style.color = 'var(--text-primary)';
+        } else {
+            document.getElementById('boxUrlInput').style.display = 'none';
+            document.getElementById('boxFileInput').style.display = 'block';
+            document.getElementById('btnTabFile').style.background = 'var(--accent)';
+            document.getElementById('btnTabFile').style.color = '#000';
+            document.getElementById('btnTabUrl').style.background = 'var(--bg-tertiary)';
+            document.getElementById('btnTabUrl').style.color = 'var(--text-primary)';
+        }
+    }
+
+    function updatePreview(url) {
+        if (url && url.trim() !== '') {
+            document.getElementById('prodImagePreview').src = url;
+        } else {
+            document.getElementById('prodImagePreview').src = 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop';
+        }
+    }
+
+    function previewSelectedFile(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('prodImagePreview').src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
     }
 
     function closeModal() {

@@ -38,14 +38,7 @@
         <!-- Gallery Hình Ảnh -->
         <div class="detail-gallery">
             <div class="main-image">
-                <c:choose>
-                    <c:when test="${not empty product.thumbnail}">
-                        <img src="${product.thumbnail.startsWith('http') ? product.thumbnail : pageContext.request.contextPath.concat('/').concat(product.thumbnail)}" alt="${product.productName}">
-                    </c:when>
-                    <c:otherwise>
-                        <img src="${pageContext.request.contextPath}/assets/images/placeholder.jpg" alt="${product.productName}">
-                    </c:otherwise>
-                </c:choose>
+                <img src="${product.imageUrl}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop';" alt="${product.productName}">
             </div>
             
             <div style="display: flex; gap: 10px; overflow-x: auto;">

@@ -73,14 +73,7 @@
                 <a href="${pageContext.request.contextPath}/product-detail?id=${prod.id}" class="product-card" style="text-decoration: none; color: inherit; display: block; cursor: pointer;">
                     <span class="product-badge">SALE</span>
                     <div class="product-image-wrapper">
-                        <c:choose>
-                            <c:when test="${not empty prod.thumbnail}">
-                                <img src="${prod.thumbnail.startsWith('http') ? prod.thumbnail : pageContext.request.contextPath.concat('/').concat(prod.thumbnail)}" alt="${prod.productName}">
-                            </c:when>
-                            <c:otherwise>
-                                <img src="${pageContext.request.contextPath}/assets/images/placeholder.jpg" alt="${prod.productName}">
-                            </c:otherwise>
-                        </c:choose>
+                        <img src="${prod.imageUrl}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop';" alt="${prod.productName}">
                     </div>
                     <div class="product-info">
                         <div class="product-brand">${prod.brandID.brandName}</div>
@@ -110,14 +103,7 @@
             <a href="${pageContext.request.contextPath}/product-detail?id=${prod.id}" class="product-card" style="text-decoration: none; color: inherit; display: block; cursor: pointer;">
                 <span class="product-badge" style="background-color: #3b82f6; color: #fff;">NEW</span>
                 <div class="product-image-wrapper">
-                    <c:choose>
-                        <c:when test="${not empty prod.thumbnail}">
-                            <img src="${prod.thumbnail.startsWith('http') ? prod.thumbnail : pageContext.request.contextPath.concat('/').concat(prod.thumbnail)}" alt="${prod.productName}">
-                        </c:when>
-                        <c:otherwise>
-                            <img src="${pageContext.request.contextPath}/assets/images/placeholder.jpg" alt="${prod.productName}">
-                        </c:otherwise>
-                    </c:choose>
+                    <img src="${prod.imageUrl}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop';" alt="${prod.productName}">
                 </div>
                 <div class="product-info">
                     <div class="product-brand">${prod.brandID.brandName}</div>
@@ -155,14 +141,7 @@
             <a href="${pageContext.request.contextPath}/product-detail?id=${prod.id}" class="product-card" style="text-decoration: none; color: inherit; display: block; cursor: pointer;">
                 <span class="product-badge" style="background-color: var(--accent); color: #0b0f19;">HOT</span>
                 <div class="product-image-wrapper">
-                    <c:choose>
-                        <c:when test="${not empty prod.thumbnail}">
-                            <img src="${prod.thumbnail.startsWith('http') ? prod.thumbnail : pageContext.request.contextPath.concat('/').concat(prod.thumbnail)}" alt="${prod.productName}">
-                        </c:when>
-                        <c:otherwise>
-                            <img src="${pageContext.request.contextPath}/assets/images/placeholder.jpg" alt="${prod.productName}">
-                        </c:otherwise>
-                    </c:choose>
+                    <img src="${prod.imageUrl}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop';" alt="${prod.productName}">
                 </div>
                 <div class="product-info">
                     <div class="product-brand">${prod.brandID.brandName}</div>
