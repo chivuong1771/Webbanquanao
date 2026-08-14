@@ -201,9 +201,10 @@ public class UserDAOImpl implements UserDAO {
 
         try {
             em.getTransaction().begin();
-            User user = em.merge(entity);
+            User mergedUser = em.merge(entity);
             em.getTransaction().commit();
-            return user;
+
+            return findById(mergedUser.getId());
 
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {

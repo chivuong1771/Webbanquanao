@@ -15,7 +15,7 @@ import poly.java.Entity.User;
 
 import java.io.IOException;
 
-@WebServlet({"/profile", "/profile/update"})
+@WebServlet({"/profile", "/profile/update", "/profile/change-password"})
 public class ProfileServlet extends HttpServlet {
 
     private final UserDAO userDAO = new UserDAOImpl();
@@ -41,6 +41,52 @@ public class ProfileServlet extends HttpServlet {
         }
 
         String path = req.getServletPath();
+
+        // -------------------------------------------------------------
+        // 1. XỬ LÝ ĐỔI MẬT KHẨU
+        // -------------------------------------------------------------
+        if ("/profile/change-password".equals(path)) {
+            String currentPassword = req.getParameter("currentPassword");
+            String newPassword = req.getParameter("newPassword");
+            String confirmPassword = req.getParameter("confirmPassword");
+
+            // Kiểm tra rỗng
+            if (currentPassword == null || currentPassword.isBlank() ||
+                    newPassword == null || newPassword.isBlank() ||
+                    confirmPassword == null || confirmPassword.isBlank()) {
+                resp.sendRedirect(req.getContextPath() + "/profile?error=missing_pw_fields");
+                return;
+            }
+
+            // Kiểm tra mật khẩu hiện tại
+            if (!user.getPassword().equals(currentPassword)) {
+                resp.sendRedirect(req.getContextPath() + "/profile?error=wrong_current_pw");
+                return;
+            }
+
+            // Kiểm tra mật khẩu mới và xác nhận mật khẩu
+            if (!newPassword.equals(confirmPassword)) {
+                resp.sendRedirect(req.getContextPath() + "/profile?error=pw_mismatch");
+                return;
+            }
+
+            try {
+                user.setPassword(newPassword);
+                User updatedUser = userDAO.update(user);
+                req.getSession().setAttribute("currentUser", updatedUser);
+
+                resp.sendRedirect(req.getContextPath() + "/profile?success=pw_change_ok");
+                return;
+            } catch (Exception e) {
+                e.printStackTrace();
+                resp.sendRedirect(req.getContextPath() + "/profile?error=pw_change_failed");
+                return;
+            }
+        }
+
+        // -------------------------------------------------------------
+        // 2. XỬ LÝ CẬP NHẬT THÔNG TIN CÁ NHÂN
+        // -------------------------------------------------------------
         if ("/profile/update".equals(path) || "/profile".equals(path)) {
             String fullname = req.getParameter("fullname");
             String phone = req.getParameter("phone");
