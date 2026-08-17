@@ -134,10 +134,55 @@ public class AdminProductServlet extends HttpServlet {
         } else {
             product.setSoldQuantity(0);
             product.setViewCount(0);
-            productDAO.create(product);
+            Product created = productDAO.create(product);
+            
+            // Tự động tạo các biến thể mặc định (Màu sắc, kích cỡ, tồn kho 50 cái) cho sản phẩm mới
+            try {
+                createDefaultVariants(created);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         resp.sendRedirect(req.getContextPath() + "/admin/products");
+    }
+
+    private void createDefaultVariants(Product product) {
+        if (product == null || product.getId() == null) return;
+        poly.java.DAO.ProductVariantDAO variantDAO = new poly.java.DAO.Impl.ProductVariantDAOImpl();
+        
+        // Tạo các biến thể cơ bản: Màu Trắng (ID 1), Đen (ID 2); Size M (ID 2), Size L (ID 3), Size XL (ID 4)
+        int[][] combinations = {
+            {1, 2}, // Trắng - M
+            {1, 3}, // Trắng - L
+            {1, 4}, // Trắng - XL
+            {2, 2}, // Đen - M
+            {2, 3}, // Đen - L
+            {2, 4}  // Đen - XL
+        };
+
+        for (int[] combo : combinations) {
+            try {
+                poly.java.Entity.ProductVariant pv = new poly.java.Entity.ProductVariant();
+                pv.setProductID(product);
+                
+                poly.java.Entity.Color col = new poly.java.Entity.Color();
+                col.setId(combo[0]);
+                pv.setColorID(col);
+                
+                poly.java.Entity.Size sz = new poly.java.Entity.Size();
+                sz.setId(combo[1]);
+                pv.setSizeID(sz);
+                
+                pv.setSku("SKU-" + product.getId() + "-C" + combo[0] + "S" + combo[1]);
+                pv.setPrice(product.getDiscountPrice() != null && product.getDiscountPrice().compareTo(BigDecimal.ZERO) > 0 ? product.getDiscountPrice() : product.getPrice());
+                pv.setQuantity(50); // Tồn kho ban đầu 50 cái
+                
+                variantDAO.create(pv);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     private String extractFileName(Part part) {

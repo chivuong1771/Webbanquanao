@@ -31,7 +31,7 @@
 
                 <div class="form-group">
                     <label class="form-label">Họ và tên người nhận (*)</label>
-                    <input type="text" name="fullname" class="form-control" placeholder="Nhập tên người nhận hàng" value="${sessionScope.currentUser.fullname}" required>
+                    <input type="text" name="fullname" class="form-control" placeholder="Nhập tên người nhận hàng" value="${not empty sessionScope.currentUser.fullName ? sessionScope.currentUser.fullName : sessionScope.currentUser.fullname}" required>
                 </div>
 
                 <div class="form-group">
@@ -41,7 +41,7 @@
 
                 <div class="form-group">
                     <label class="form-label">Địa chỉ nhận hàng (*)</label>
-                    <textarea name="address" rows="3" class="form-control" placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố..." style="resize: none;" required>${sessionScope.currentUser.address}</textarea>
+                    <textarea name="address" rows="3" class="form-control" placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố..." style="resize: none;" required>${not empty sessionScope.currentUser.address ? sessionScope.currentUser.address : ''}</textarea>
                 </div>
 
                 <div class="form-group">

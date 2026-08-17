@@ -8,23 +8,45 @@
     <div class="hero-slider">
         <c:choose>
             <c:when test="${not empty banners}">
-                <c:forEach var="banner" items="${banners}">
-                    <div class="slide" style="background-image: url('${pageContext.request.contextPath}/${banner.imageUrl}');">
+                <c:forEach var="banner" items="${banners}" varStatus="status">
+                    <div class="slide ${status.first ? 'active' : ''}">
                         <div class="slide-content">
-                            <span class="slide-tag">Ưu đãi độc quyền</span>
+                            <span class="slide-tag">ƯU ĐÃI ĐỘC QUYỀN</span>
                             <h2 class="slide-title">${banner.title}</h2>
-                            <a href="${pageContext.request.contextPath}/${banner.link}" class="btn btn-primary">Mua Ngay <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i></a>
+                            <a href="${pageContext.request.contextPath}/${banner.link}" class="btn-banner-pill">
+                                MUA NGAY <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
+                            </a>
+                        </div>
+                        <div class="slide-graphic">
+                            <svg width="340" height="340" viewBox="0 0 340 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="170" cy="170" r="150" stroke="#d4af37" stroke-width="1.5" stroke-dasharray="4 4"/>
+                                <circle cx="170" cy="170" r="120" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+                                <polygon points="170,50 66,230 274,230" stroke="rgba(255,255,255,0.18)" stroke-width="1" fill="none"/>
+                                <circle cx="318" cy="150" r="4" fill="#d4af37"/>
+                                <circle cx="90" cy="270" r="4" fill="#3b82f6"/>
+                            </svg>
                         </div>
                     </div>
                 </c:forEach>
             </c:when>
             <c:otherwise>
-                <!-- Fallback slide if no banner in database -->
-                <div class="slide" style="background: linear-gradient(135deg, #131a26 0%, #0b0f19 100%);">
+                <!-- Fallback slide matching exact screenshot -->
+                <div class="slide active">
                     <div class="slide-content">
-                        <span class="slide-tag">Bộ sưu tập mới</span>
-                        <h2 class="slide-title">Thời Trang Hiện Đại & Sang Trọng</h2>
-                        <a href="${pageContext.request.contextPath}/products" class="btn btn-primary">Khám Phá Ngay <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i></a>
+                        <span class="slide-tag">ƯU ĐÃI ĐỘC QUYỀN</span>
+                        <h2 class="slide-title">Bộ Sưu Tập Mùa Hè<br>2026</h2>
+                        <a href="${pageContext.request.contextPath}/products" class="btn-banner-pill">
+                            MUA NGAY <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
+                        </a>
+                    </div>
+                    <div class="slide-graphic">
+                        <svg width="340" height="340" viewBox="0 0 340 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="170" cy="170" r="150" stroke="#d4af37" stroke-width="1.5" stroke-dasharray="4 4"/>
+                            <circle cx="170" cy="170" r="120" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+                            <polygon points="170,50 66,230 274,230" stroke="rgba(255,255,255,0.18)" stroke-width="1" fill="none"/>
+                            <circle cx="318" cy="150" r="4" fill="#d4af37"/>
+                            <circle cx="90" cy="270" r="4" fill="#3b82f6"/>
+                        </svg>
                     </div>
                 </div>
             </c:otherwise>

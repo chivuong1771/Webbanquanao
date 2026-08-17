@@ -47,11 +47,31 @@ public class ProductDAOImpl implements ProductDAO {
         EntityManager em = JpaUtil.getEntityManager();
         try {
             em.getTransaction().begin();
+            
+            // 1. Xóa các bảng liên kết trực tiếp với Product
+            em.createQuery("DELETE FROM Wishlist w WHERE w.productID.id = :id").setParameter("id", id).executeUpdate();
+            em.createQuery("DELETE FROM Review r WHERE r.productID.id = :id").setParameter("id", id).executeUpdate();
+            em.createQuery("DELETE FROM PromotionDetail pd WHERE pd.productID.id = :id").setParameter("id", id).executeUpdate();
+            em.createQuery("DELETE FROM ProductImage pi WHERE pi.productID.id = :id").setParameter("id", id).executeUpdate();
+
+            // 2. Lấy danh sách VariantID của sản phẩm này để xóa các ràng buộc khóa ngoại con
+            List<Integer> variantIds = em.createQuery("SELECT pv.id FROM ProductVariant pv WHERE pv.productID.id = :id", Integer.class)
+                    .setParameter("id", id)
+                    .getResultList();
+
+            if (!variantIds.isEmpty()) {
+                em.createQuery("DELETE FROM CartDetail cd WHERE cd.variantID.id IN :vids").setParameter("vids", variantIds).executeUpdate();
+                em.createQuery("DELETE FROM OrderDetail od WHERE od.variantID.id IN :vids").setParameter("vids", variantIds).executeUpdate();
+                em.createQuery("DELETE FROM InventoryHistory ih WHERE ih.variantID.id IN :vids").setParameter("vids", variantIds).executeUpdate();
+                em.createQuery("DELETE FROM ProductVariant pv WHERE pv.productID.id = :id").setParameter("id", id).executeUpdate();
+            }
+
+            // 3. Xóa vĩnh viễn sản phẩm khỏi bảng Products
             Product product = em.find(Product.class, id);
             if (product != null) {
-                product.setStatus(false);
-                em.merge(product);
+                em.remove(product);
             }
+
             em.getTransaction().commit();
         } catch (Exception e) {
             if (em.getTransaction().isActive()) em.getTransaction().rollback();

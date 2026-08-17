@@ -1,111 +1,150 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ include file="/WEB-INF/views/header.jsp" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Người Dùng - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css?v=3">
+</head>
+<body class="admin-layout">
 
-<div class="container" style="margin-top: 30px; margin-bottom: 80px;">
-    <h2 class="section-title" style="margin-bottom: 20px;">LAB 5 - BÀI 2: QUẢN LÝ & TÌM KIẾM PHÂN TRANG NHÂN VIÊN</h2>
+    <!-- Sidebar Admin -->
+    <aside class="admin-sidebar">
+        <div class="logo" style="margin-bottom: 30px;">
+            <i class="fa-solid fa-crown" style="color: var(--accent);"></i> PANEL ADMIN
+        </div>
+        <div style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 12px;">
+            QUẢN LÝ HỆ THỐNG
+        </div>
+        <nav class="admin-menu">
+            <a href="${pageContext.request.contextPath}/admin/dashboard" class="admin-menu-item">
+                <i class="fa-solid fa-chart-pie"></i> Tổng quan
+            </a>
+            <a href="${pageContext.request.contextPath}/admin/products" class="admin-menu-item">
+                <i class="fa-solid fa-shirt"></i> Sản phẩm
+            </a>
+            <a href="${pageContext.request.contextPath}/admin/categories" class="admin-menu-item">
+                <i class="fa-solid fa-list"></i> Danh mục
+            </a>
+            <a href="${pageContext.request.contextPath}/admin/orders" class="admin-menu-item">
+                <i class="fa-solid fa-receipt"></i> Đơn hàng
+            </a>
+            <a href="${pageContext.request.contextPath}/admin/coupons" class="admin-menu-item">
+                <i class="fa-solid fa-ticket"></i> Mã giảm giá
+            </a>
+            <a href="${pageContext.request.contextPath}/admin/users" class="admin-menu-item active">
+                <i class="fa-solid fa-users"></i> Người dùng
+            </a>
+            <a href="${pageContext.request.contextPath}/admin/statistics" class="admin-menu-item">
+                <i class="fa-solid fa-chart-line"></i> Báo cáo thống kê
+            </a>
+            <a href="${pageContext.request.contextPath}/" class="admin-menu-item" style="margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 20px; color: var(--accent);">
+                <i class="fa-solid fa-store"></i> Về Cửa Hàng
+            </a>
+            <a href="${pageContext.request.contextPath}/logout" class="admin-menu-item" style="color: #ef4444;">
+                <i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất
+            </a>
+        </nav>
+    </aside>
 
-    <c:if test="${not empty param.newPass}">
-        <div style="background-color: #065f46; color: #34d399; padding: 14px; border-radius: 8px; margin-bottom: 20px;">
-            <i class="fa-solid fa-circle-check"></i> Đã cấp lại mật khẩu thành công cho tài khoản <strong>${param.email}</strong>! Mật khẩu mới vừa tạo: <strong style="font-size: 1.2rem; color: #fff; text-decoration: underline;">${param.newPass}</strong> (Đã giả lập gửi tới email nhân viên).
-        </div>
-    </c:if>
+    <!-- Main Content -->
+    <main class="admin-main">
+        <header style="background: transparent; border: none; padding: 0; margin-bottom: 30px; position: static;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 style="font-size: 2rem; font-weight: 800;">Quản Lý Người Dùng & Nhân Viên</h1>
+                    <p style="color: var(--text-secondary);">Danh sách tài khoản thành viên và phân quyền trong hệ thống</p>
+                </div>
+            </div>
+        </header>
 
-    <!-- Form Tìm kiếm Nhân viên -->
-    <form action="${pageContext.request.contextPath}/admin/users" method="GET" style="background-color: var(--bg-secondary); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) 120px; gap: 15px; align-items: end;">
-        <div>
-            <label class="form-label">Tên nhân viên</label>
-            <input type="text" name="keyword" value="${keyword}" placeholder="Nhập tên nhân viên..." class="form-control">
-        </div>
-        <div>
-            <label class="form-label">Email</label>
-            <input type="text" name="email" value="${email}" placeholder="Nhập email..." class="form-control">
-        </div>
-        <div>
-            <label class="form-label">Trạng thái</label>
-            <select name="status" class="form-control">
-                <option value="">-- Tất cả trạng thái --</option>
-                <option value="true" ${status == 'true' ? 'selected' : ''}>Hoạt động</option>
-                <option value="false" ${status == 'false' ? 'selected' : ''}>Tạm khóa</option>
-            </select>
-        </div>
-        <div>
-            <button type="submit" class="btn btn-primary" style="width: 100%; height: 42px;">
-                <i class="fa-solid fa-magnifying-glass"></i> Tìm Kiếm
-            </button>
-        </div>
-    </form>
+        <!-- Form Tìm Kiếm Lọc Người Dùng -->
+        <form action="${pageContext.request.contextPath}/admin/users" method="GET" style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) 120px; gap: 14px; align-items: end;">
+            <div>
+                <label class="form-label" style="font-size: 0.85rem;">Họ tên / Tên đăng nhập</label>
+                <input type="text" name="keyword" value="${keyword}" placeholder="Nhập tên..." class="form-control">
+            </div>
+            <div>
+                <label class="form-label" style="font-size: 0.85rem;">Địa chỉ Email</label>
+                <input type="text" name="email" value="${email}" placeholder="Nhập email..." class="form-control">
+            </div>
+            <div>
+                <label class="form-label" style="font-size: 0.85rem;">Trạng Thái Tài Khoản</label>
+                <select name="status" class="form-control">
+                    <option value="">-- Tất cả trạng thái --</option>
+                    <option value="true" ${status == 'true' ? 'selected' : ''}>Hoạt động (Active)</option>
+                    <option value="false" ${status == 'false' ? 'selected' : ''}>Đã khóa (Locked)</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; height: 42px;">
+                    <i class="fa-solid fa-magnifying-glass"></i> Tìm Kiếm
+                </button>
+            </div>
+        </form>
 
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <span style="color: var(--text-secondary);">Tổng số nhân viên tìm thấy: <strong>${totalUsers}</strong> (Mỗi trang 10 nhân viên)</span>
-    </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <span style="color: var(--text-secondary);">Tổng số người dùng: <strong>${totalUsers != null ? totalUsers : users.size()}</strong></span>
+        </div>
 
-    <!-- Bảng Danh Sách Nhân Viên -->
-    <div style="overflow-x: auto; background-color: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border-color);">
-        <table style="width: 100%; border-collapse: collapse; text-align: left;">
-            <thead>
-                <tr style="border-bottom: 1px solid var(--border-color); background-color: rgba(255,255,255,0.05);">
-                    <th style="padding: 14px;">ID</th>
-                    <th style="padding: 14px;">Họ và Tên</th>
-                    <th style="padding: 14px;">Email</th>
-                    <th style="padding: 14px;">Số Điện Thoại</th>
-                    <th style="padding: 14px;">Vai Trò</th>
-                    <th style="padding: 14px;">Trạng Thái</th>
-                    <th style="padding: 14px; text-align: center;">Thao Tác (Bài 3)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:choose>
-                    <c:when test="${not empty users}">
-                        <c:forEach var="u" items="${users}">
-                            <tr style="border-bottom: 1px solid var(--border-color);">
-                                <td style="padding: 14px;">#${u.id}</td>
-                                <td style="padding: 14px; font-weight: 600;">${u.fullName}</td>
-                                <td style="padding: 14px;">${u.email}</td>
-                                <td style="padding: 14px;">${u.phone}</td>
-                                <td style="padding: 14px;"><span style="color: var(--accent); font-weight: 700;">${u.roleID.roleName}</span></td>
-                                <td style="padding: 14px;">
-                                    <c:choose>
-                                        <c:when test="${u.status}">
-                                            <span style="color: #10b981; font-weight: 600;">● Hoạt động</span>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span style="color: #ef4444; font-weight: 600;">● Tạm khóa</span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-                                <td style="padding: 14px; text-align: center;">
-                                    <form action="${pageContext.request.contextPath}/admin/users/reset-password" method="POST" style="display: inline;" onsubmit="return confirm('Bạn có chắc chắn muốn cấp lại mật khẩu ngẫu nhiên cho nhân viên ${u.fullName}?');">
-                                        <input type="hidden" name="userId" value="${u.id}">
-                                        <button type="submit" class="btn" style="background-color: #3b82f6; color: #fff; padding: 6px 12px; font-size: 0.85rem;">
-                                            <i class="fa-solid fa-key"></i> Cấp Mật Khẩu Mới
-                                        </button>
-                                    </form>
-                                </td>
+        <!-- Bảng Danh Sách Người Dùng -->
+        <div style="background-color: var(--bg-secondary); border-radius: var(--radius-md); border: 1px solid var(--border-color); padding: 20px; overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-secondary);">
+                        <th style="padding: 12px;">Mã TV (#)</th>
+                        <th style="padding: 12px;">Họ và Tên</th>
+                        <th style="padding: 12px;">Email</th>
+                        <th style="padding: 12px;">Số Điện Thoại</th>
+                        <th style="padding: 12px;">Vai Trò</th>
+                        <th style="padding: 12px;">Trạng Thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:choose>
+                        <c:when test="${not empty users}">
+                            <c:forEach var="u" items="${users}">
+                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                    <td style="padding: 14px; font-weight: 700; color: var(--accent);">#${u.id}</td>
+                                    <td style="padding: 14px; font-weight: 600;">${u.fullName}</td>
+                                    <td style="padding: 14px; color: var(--text-secondary);">${u.email}</td>
+                                    <td style="padding: 14px; color: var(--text-secondary);">${u.phone != null ? u.phone : '-'}</td>
+                                    <td style="padding: 14px;">
+                                        <c:choose>
+                                            <c:when test="${u.roleID != null && u.roleID.roleName == 'ADMIN'}">
+                                                <span style="background: rgba(212, 175, 55, 0.15); color: var(--accent); padding: 4px 10px; border-radius: 4px; font-weight: 700; font-size: 0.85rem;">ADMIN</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span style="background: rgba(59, 130, 246, 0.15); color: #3b82f6; padding: 4px 10px; border-radius: 4px; font-weight: 600; font-size: 0.85rem;">CUSTOMER</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td style="padding: 14px;">
+                                        <c:choose>
+                                            <c:when test="${u.status}">
+                                                <span style="color: #10b981; font-weight: 600;">● Hoạt động</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span style="color: #ef4444; font-weight: 600;">● Đã khóa</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 30px; color: var(--text-secondary);">Không tìm thấy người dùng phù hợp.</td>
                             </tr>
-                        </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <tr>
-                            <td colspan="7" style="padding: 30px; text-align: center; color: var(--text-secondary);">Không tìm thấy nhân viên nào phù hợp với điều kiện tìm kiếm.</td>
-                        </tr>
-                    </c:otherwise>
-                </c:choose>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Phân trang 10 sản phẩm/nhân viên mỗi trang -->
-    <c:if test="${totalPages > 1}">
-        <div style="display: flex; justify-content: center; gap: 8px; margin-top: 30px;">
-            <c:forEach begin="1" end="${totalPages}" var="p">
-                <a href="${pageContext.request.contextPath}/admin/users?keyword=${keyword}&email=${email}&status=${status}&page=${p}"
-                   class="btn" style="padding: 8px 16px; background-color: ${p == currentPage ? 'var(--accent)' : 'var(--bg-secondary)'}; color: ${p == currentPage ? '#000' : '#fff'}; border: 1px solid var(--border-color);">
-                    ${p}
-                </a>
-            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
+                </tbody>
+            </table>
         </div>
-    </c:if>
-</div>
-
-<%@ include file="/WEB-INF/views/footer.jsp" %>
+    </main>
+</body>
+</html>

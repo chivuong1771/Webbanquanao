@@ -190,7 +190,20 @@ public class OrderDAOImpl implements OrderDAO {
             if (endDate != null) query.setParameter("end", endDate);
 
             query.setMaxResults(limit); // 5 thức uống / sản phẩm bán chạy nhất
-            return query.getResultList();
+            List<Object[]> list = query.getResultList();
+            
+            // Khởi tạo (Eager load) Category và Brand khi EntityManager còn mở để tránh LazyInitializationException
+            for (Object[] row : list) {
+                if (row[0] instanceof poly.java.Entity.Product prod) {
+                    if (prod.getCategoryID() != null) {
+                        prod.getCategoryID().getCategoryName();
+                    }
+                    if (prod.getBrandID() != null) {
+                        prod.getBrandID().getBrandName();
+                    }
+                }
+            }
+            return list;
         } finally {
             em.close();
         }

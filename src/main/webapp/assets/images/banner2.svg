@@ -1,20 +1,37 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" width="100%" height="100%">
   <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#0b0f19" stop-opacity="0.95"/>
-      <stop offset="50%" stop-color="#1e1b4b" stop-opacity="0.8"/>
-      <stop offset="100%" stop-color="#0b0f19" stop-opacity="0.95"/>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19"/>
+      <stop offset="50%" stop-color="#1e1828"/>
+      <stop offset="100%" stop-color="#090d16"/>
     </linearGradient>
+    <radialGradient id="glowRed" cx="85%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#ef4444" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#0b0f19" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowGold" cx="15%" cy="85%" r="50%">
+      <stop offset="0%" stop-color="#d4af37" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#0b0f19" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="15" cy="15" r="1" fill="rgba(255, 255, 255, 0.05)"/>
+    </pattern>
   </defs>
-  <!-- Background Color -->
-  <rect width="1200" height="480" fill="#0b0f19"/>
-  <!-- Decorative Abstract Gradients -->
-  <circle cx="950" cy="200" r="280" fill="#ef4444" opacity="0.15" filter="blur(80px)"/>
-  <rect width="1200" height="480" fill="url(#grad)"/>
-  <!-- Text content -->
-  <text x="100" y="180" font-family="'Outfit', sans-serif" font-size="24" font-weight="bold" fill="#ef4444" letter-spacing="3">SIÊU ƯU ĐÃI LỚN NHẤT NĂM</text>
-  <text x="100" y="270" font-family="'Outfit', sans-serif" font-size="64" font-weight="800" fill="#fff" letter-spacing="1">GIẢM GIÁ LÊN ĐẾN 50%</text>
-  <text x="100" y="340" font-family="'Outfit', sans-serif" font-size="20" fill="#9ca3af">Áp dụng cho toàn bộ các sản phẩm trong bộ sưu tập Thu Đông.</text>
-  <!-- Red Border lines -->
-  <line x1="100" y1="120" x2="300" y2="120" stroke="#ef4444" stroke-width="4"/>
+  
+  <!-- Base Background -->
+  <rect width="1200" height="480" fill="url(#grad2)"/>
+  <rect width="1200" height="480" fill="url(#dots)"/>
+  
+  <!-- Ambient Lights -->
+  <rect width="1200" height="480" fill="url(#glowRed)"/>
+  <rect width="1200" height="480" fill="url(#glowGold)"/>
+  
+  <!-- Modern Geometric Accent Elements on the Right Side -->
+  <g opacity="0.45" transform="translate(760, 50)">
+    <rect x="50" y="40" width="260" height="260" rx="40" fill="none" stroke="rgba(239, 68, 68, 0.4)" stroke-width="1.5" transform="rotate(15 180 170)"/>
+    <rect x="80" y="70" width="200" height="200" rx="30" fill="none" stroke="rgba(212, 175, 55, 0.3)" stroke-width="1.2" transform="rotate(30 180 170)"/>
+    <circle cx="180" cy="170" r="80" fill="none" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1" stroke-dasharray="6 4"/>
+    <circle cx="310" cy="50" r="5" fill="#ef4444"/>
+    <circle cx="60" cy="280" r="4" fill="#d4af37"/>
+  </g>
 </svg>

@@ -217,11 +217,12 @@ header {
 .hero-slider {
     margin: 24px 0 60px 0;
     position: relative;
-    height: 520px;
-    border-radius: var(--radius-lg);
+    height: 420px;
+    border-radius: 20px;
     overflow: hidden;
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, #0f141d 0%, #0a0d14 100%);
 }
 
 .slide {
@@ -234,7 +235,8 @@ header {
     background-position: center;
     display: flex;
     align-items: center;
-    padding: 80px;
+    justify-content: space-between;
+    padding: 0 80px;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.8s ease-in-out;
@@ -245,39 +247,71 @@ header {
     pointer-events: auto;
 }
 
-.slide::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, rgba(9, 9, 11, 0.95) 0%, rgba(9, 9, 11, 0.6) 50%, rgba(9, 9, 11, 0.2) 100%);
-    z-index: 1;
-}
-
 .slide-content {
     position: relative;
-    z-index: 2;
-    max-width: 600px;
+    z-index: 3;
+    max-width: 580px;
     animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .slide-tag {
-    color: var(--accent);
+    color: #e5b842;
     text-transform: uppercase;
     font-weight: 800;
     letter-spacing: 3px;
     font-size: 0.85rem;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     display: inline-block;
-    border-bottom: 2px solid var(--accent);
+    border-bottom: 2px solid #e5b842;
     padding-bottom: 4px;
 }
 
 .slide-title {
     font-size: 3.5rem;
     font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 32px;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+}
+
+.btn-banner-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #e5b842;
+    color: #0b0f19;
+    font-weight: 800;
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    padding: 14px 32px;
+    border-radius: 12px;
+    text-decoration: none;
+    box-shadow: 0 4px 20px rgba(229, 184, 66, 0.35);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-banner-pill:hover {
+    background: #f0c44d;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(229, 184, 66, 0.5);
+    color: #000000;
+}
+
+.slide-graphic {
+    position: absolute;
+    right: 70px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    opacity: 0.45;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.hero-slider:hover .slide-graphic {
+    opacity: 0.75;
+}
     line-height: 1.15;
     margin-bottom: 28px;
     color: var(--text-primary);

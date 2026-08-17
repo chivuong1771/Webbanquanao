@@ -59,7 +59,40 @@ public class AddToCartServlet extends HttpServlet {
             try {
                 int productId = Integer.parseInt(productIdStr);
                 variant = variantDAO.findByProductColorSize(productId, color, size);
-            } catch (Exception ignored) {}
+                
+                // Nếu chưa có đúng màu/size, lấy bất kỳ biến thể nào của sản phẩm
+                if (variant == null) {
+                    var list = variantDAO.findByProductId(productId);
+                    if (!list.isEmpty()) {
+                        variant = list.get(0);
+                    }
+                }
+
+                // Nếu sản phẩm hoàn toàn chưa có biến thể nào trong CSDL (sản phẩm mới tạo), tự động khởi tạo biến thể
+                if (variant == null) {
+                    poly.java.DAO.ProductDAO productDAO = new poly.java.DAO.Impl.ProductDAOImpl();
+                    poly.java.Entity.Product prod = productDAO.findById(productId);
+                    if (prod != null) {
+                        ProductVariant newPv = new ProductVariant();
+                        newPv.setProductID(prod);
+
+                        poly.java.Entity.Color c = new poly.java.Entity.Color();
+                        c.setId(1); // Trắng
+                        poly.java.Entity.Size s = new poly.java.Entity.Size();
+                        s.setId(2); // M
+
+                        newPv.setColorID(c);
+                        newPv.setSizeID(s);
+                        newPv.setSku("SKU-" + prod.getId() + "-AUTO");
+                        newPv.setPrice(prod.getDiscountPrice() != null && prod.getDiscountPrice().compareTo(java.math.BigDecimal.ZERO) > 0 ? prod.getDiscountPrice() : prod.getPrice());
+                        newPv.setQuantity(50);
+
+                        variant = variantDAO.create(newPv);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         if (variant != null) {
