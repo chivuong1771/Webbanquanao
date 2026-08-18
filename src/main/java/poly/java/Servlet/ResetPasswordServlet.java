@@ -8,12 +8,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import poly.java.DAO.UserDAO;
 import poly.java.DAO.Impl.UserDAOImpl;
 import poly.java.Entity.User;
+import poly.java.Utils.EmailUtils;
 
 import java.io.IOException;
 import java.security.SecureRandom;
-import java.util.UUID;
 
-@WebServlet({"/admin/users/reset-password", "/forgot-password"})
+// Chỉ giữ lại endpoint dành cho Reset Password
+@WebServlet({"/admin/users/reset-password", "/reset-password"})
 public class ResetPasswordServlet extends HttpServlet {
 
     private final UserDAO userDAO = new UserDAOImpl();
@@ -25,6 +26,8 @@ public class ResetPasswordServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+
         String email = req.getParameter("email");
         String userIdStr = req.getParameter("userId");
 
@@ -53,10 +56,15 @@ public class ResetPasswordServlet extends HttpServlet {
         user.setPassword(newRandomPassword);
         userDAO.update(user);
 
-        // 3. Giả lập / Gửi email mật khẩu ngẫu nhiên tới nhân viên
-        boolean emailSent = sendResetEmail(user.getEmail(), newRandomPassword);
+        // 3. Gửi email mật khẩu ngẫu nhiên tới người dùng
+        boolean emailSent = sendResetEmail(req.getServletContext(), user.getEmail(), newRandomPassword);
 
-        req.setAttribute("successMessage", "Đã cấp lại mật khẩu ngẫu nhiên mới: [" + newRandomPassword + "] cho nhân viên " + user.getEmail() + " và gửi qua Email!");
+        if (emailSent) {
+            req.setAttribute("successMessage", "Đã cấp lại mật khẩu mới cho " + user.getEmail() + " và gửi thành công qua Email!");
+        } else {
+            req.setAttribute("errorMessage", "Đã cập nhật mật khẩu mới [" + newRandomPassword + "] nhưng gửi Email thất bại!");
+        }
+
         req.setAttribute("newPassword", newRandomPassword);
         req.setAttribute("resetUser", user);
 
@@ -78,13 +86,21 @@ public class ResetPasswordServlet extends HttpServlet {
         return sb.toString();
     }
 
-    private boolean sendResetEmail(String recipientEmail, String newPassword) {
-        System.out.println("=================================================");
-        System.out.println(" [GỬI EMAIL CẤP LẠI MẬT KHẨU NHÂN VIÊN]");
-        System.out.println(" Người nhận: " + recipientEmail);
-        System.out.println(" Mật khẩu ngẫu nhiên mới: " + newPassword);
-        System.out.println(" Nội dung: Mật khẩu mới của bạn là " + newPassword + ". Vui lòng đổi lại sau khi đăng nhập.");
-        System.out.println("=================================================");
-        return true;
+    private boolean sendResetEmail(jakarta.servlet.ServletContext context, String recipientEmail, String newPassword) {
+        try {
+            String subject = "Cấp lại mật khẩu tài khoản";
+            String body = "<div style='font-family: Arial, sans-serif; padding: 20px;'>"
+                    + "<h3>Kính gửi người dùng,</h3>"
+                    + "<p>Mật khẩu truy cập hệ thống của bạn đã được khởi tạo lại.</p>"
+                    + "<p>Mật khẩu mới của bạn là: <strong style='color: #d9534f; font-size: 18px;'>" + newPassword + "</strong></p>"
+                    + "<p>Vui lòng đăng nhập và đổi lại mật khẩu ngay để đảm bảo an toàn.</p>"
+                    + "</div>";
+
+            EmailUtils.sendEmail(context, recipientEmail, subject, body);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

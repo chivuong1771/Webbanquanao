@@ -8,6 +8,11 @@ import org.hibernate.annotations.Nationalized;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import java.util.Date;
 
 @Entity
 @Table(name = "Users")
@@ -59,6 +64,18 @@ public class User {
     @ColumnDefault("getdate()")
     @Column(name = "CreatedAt")
     private Instant createdAt;
+
+    // Bổ sung thuộc tính Reset Token cho Quên Mật Khẩu
+    @Size(max = 255)
+    @Column(name = "ResetToken")
+    private String resetToken;
+
+    @Column(name = "TokenExpiry")
+    private LocalDateTime tokenExpiry;
+
+    // ==========================================
+    // GETTER AND SETTER
+    // ==========================================
 
     public Integer getId() {
         return id;
@@ -147,7 +164,27 @@ public class User {
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
-    // Thêm hàm này vào User.java để JSP gọi currentUser.role không bị lỗi
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public LocalDateTime getTokenExpiry() {
+        return tokenExpiry;
+    }
+
+    public void setTokenExpiry(LocalDateTime tokenExpiry) {
+        this.tokenExpiry = tokenExpiry;
+    }
+
+    // ==========================================
+    // HELPER METHODS CHO JSP / VIEW
+    // ==========================================
+
     public String getRole() {
         if (this.roleID != null) {
             return this.roleID.getRoleName();
@@ -179,4 +216,27 @@ public class User {
         return "";
     }
 
+    @Column(name = "reset_otp")
+    private String resetOtp;
+
+    @Column(name = "otp_expiry")
+    private Date otpExpiry;
+
+    // Getter & Setter cho resetOtp
+    public String getResetOtp() {
+        return resetOtp;
+    }
+
+    public void setResetOtp(String resetOtp) {
+        this.resetOtp = resetOtp;
+    }
+
+    // Getter & Setter cho otpExpiry
+    public Date getOtpExpiry() {
+        return otpExpiry;
+    }
+
+    public void setOtpExpiry(Date otpExpiry) {
+        this.otpExpiry = otpExpiry;
+    }
 }

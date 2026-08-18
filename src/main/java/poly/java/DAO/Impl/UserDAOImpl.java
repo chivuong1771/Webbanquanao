@@ -2,11 +2,13 @@ package poly.java.DAO.Impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 import poly.java.DAO.UserDAO;
 import poly.java.Entity.Role;
 import poly.java.Entity.User;
 import poly.java.Utils.JpaUtil;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class UserDAOImpl implements UserDAO {
@@ -102,6 +104,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User findByEmail(String email) {
+        if (email == null || email.trim().isEmpty()) return null;
         EntityManager em = JpaUtil.getEntityManager();
 
         try {
@@ -109,11 +112,11 @@ public class UserDAOImpl implements UserDAO {
                 SELECT u 
                 FROM User u 
                 JOIN FETCH u.roleID 
-                WHERE u.email = :email
+                WHERE LOWER(TRIM(u.email)) = LOWER(TRIM(:email))
                 """;
 
             return em.createQuery(jpql, User.class)
-                    .setParameter("email", email)
+                    .setParameter("email", email.trim())
                     .getSingleResult();
 
         } catch (NoResultException e) {
@@ -126,6 +129,27 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public boolean existsByEmail(String email) {
         return findByEmail(email) != null;
+    }
+
+    @Override
+    public boolean checkEmailExist(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            return false;
+        }
+        EntityManager em = JpaUtil.getEntityManager();
+        try {
+            String jpql = "SELECT COUNT(u) FROM User u WHERE LOWER(TRIM(u.email)) = LOWER(TRIM(:email))";
+            TypedQuery<Long> query = em.createQuery(jpql, Long.class);
+            query.setParameter("email", email.trim());
+
+            Long count = query.getSingleResult();
+            return count != null && count > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            em.close();
+        }
     }
 
     @Override
@@ -164,6 +188,48 @@ public class UserDAOImpl implements UserDAO {
             return em.createQuery(jpql, User.class)
                     .getResultList();
 
+        } finally {
+            em.close();
+        }
+    }
+
+    // ==========================================
+    // Quản lý Reset Password Token
+    // ==========================================
+
+    @Override
+    public void updateResetToken(String email, String token, LocalDateTime expiry) {
+        EntityManager em = JpaUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            User user = findByEmail(email);
+            if (user != null) {
+                user.setResetToken(token);
+                user.setTokenExpiry(expiry);
+                em.merge(user);
+            }
+            em.getTransaction().commit(); // QUAN TRỌNG: Phải commit để lưu vào DB
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public User findByResetToken(String token) {
+        if (token == null || token.trim().isEmpty()) return null;
+        EntityManager em = JpaUtil.getEntityManager();
+        try {
+            String jpql = "SELECT u FROM User u JOIN FETCH u.roleID WHERE u.resetToken = :token";
+            return em.createQuery(jpql, User.class)
+                    .setParameter("token", token.trim())
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
         } finally {
             em.close();
         }
